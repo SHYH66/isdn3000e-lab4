@@ -29,6 +29,10 @@ void task2() {
     //  1). Use pinocchio::urdf::buildModel() to construct the kinematic model.
     //  2). Use pinocchio::urdf::buildGeom() to load the visual geometry.
 
+    pinocchio::urdf::buildModel(urdf_path, model);
+    pinocchio::urdf::buildGeom(model, urdf_path, pinocchio::VISUAL, geom_model, robot_dir);
+
+
     pinocchio::Data data(model);
     pinocchio::GeometryData geom_data(geom_model);
 
@@ -39,8 +43,16 @@ void task2() {
         const auto& obj = geom_model.geometryObjects[i];
 
         // TODO 2: Register all meshes of the robot
+        Eigen::MatrixXd V;
+        Eigen::MatrixXi F;
+        igl::readOBJ(obj.meshPath, V, F);
+        polyscope::registerSurfaceMesh(obj.meshPath,V, F);
+
+
 
     }
+
+
 
     polyscope::show();
 }

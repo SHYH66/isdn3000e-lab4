@@ -70,15 +70,38 @@ void task3() {
         // TODO 1: Create 7 sliders for 7 joints, whose value should be between q_min and q_max.
         //  The sliders update the q_ui instead of q.
 
+        for (int j = 0; j < 7; ++j) {
+            std::string label = "q" + std::to_string(j);
+            ImGui::SliderFloat(label.c_str(), &q_ui[j], q_min[j], q_max[j]);
+        }
+
 
         for (int j = 0; j < 7; ++j)
+        {
             q[j] = q_ui[j];
+        }
+
 
 
         // TODO 2: Use the slider values to update robot pose + meshes
         //  1) Recompute FK + frame placements + geometry placements.
         //  2) For each mesh, use geom_data.oMg[i] to compute the new world vertices,
         //    then call meshes[i]->updateVertexPositions().
+        pinocchio::forwardKinematics(model, data, q);
+        pinocchio::updateFramePlacements(model, data);
+        pinocchio::updateGeometryPlacements(model, data, geom_model, geom_data);
+
+        for (int i = 0; i < meshes.size(); ++i)
+        {
+            pinocchio::SE3 M = geom_data.oMg[i];
+            Eigen::Matrix3d R = M.rotation();
+            Eigen::Vector3d t = M.translation();
+
+            Eigen::MatrixXd Vw = (V_locals[i] * R.transpose()).rowwise() + t.transpose();
+            meshes[i]->updateVertexPositions(Vw);
+        }
+
+
 
 
     };

@@ -60,6 +60,12 @@ void task1() {
 
         if (mode == 1) {
             // TODO 1: Translate the object from origin to (-0.1, -0.1, -0.1) by modifying t, which can be defined by Eigen::Vector3d.
+            Eigen::Vector3d t(-0.1, -0.1, -0.1);
+            T.block<3,1>(0,3) = t;
+            ///以上两行ai写的，感觉写的比我这个好
+            ///T(0,3)= -0.1;
+            ///T(1,3)=-0.1;
+            ///T(2,3)= -0.1;
 
 
         }
@@ -69,6 +75,13 @@ void task1() {
             // TODO 2: Orbit the bunny around the WORLD Y axis by angle theta by setting the translation t.
             //  Here we keep R = I, and modify only t via t = [ r*cosθ, 0, r*sinθ ]
             //  The radius is set to 0.2 by default.
+            ///Eigen::Vector3d t(radius * cos(theta), 0, radius * sin(theta));
+            ///T.block<3,1>(0,3) = t;
+            ///以上两行是ai写的,感觉写的比我这个好，并且跟绿字给的方法是一个
+            T(0,3)= radius * cos(theta);
+            T(1,3)=0;
+            T(2,3)= radius * sin(theta);
+
 
 
         }
@@ -79,6 +92,11 @@ void task1() {
             //  Ry= [  0     1    0    0]
             //      [ -sinθ  0   cosθ  0]
             //      [ 0      0    0    1]
+            T(0,0) = cos(theta);
+            T(0,2) = sin(theta);
+            T(2,0) = -sin(theta);
+            T(2,2) = cos(theta);
+
 
 
         }
